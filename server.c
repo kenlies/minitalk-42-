@@ -27,7 +27,7 @@ void	setzero(void)
 
 void	str_create(void)
 {
-	g_info.str = malloc(sizeof(int) * g_info.len + 1);
+	g_info.str = malloc(sizeof(char) * g_info.len + 1);
 	if (!g_info.str)
 	{
 		g_info.i = 0;
