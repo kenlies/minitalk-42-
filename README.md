@@ -5,6 +5,7 @@ This was a project in which we had to create a simple communication system betwe
 There occured a couple of oddities in my evals, but the core principle is correct and it PASSED =D.
 
 First the server must be launched -> it prints its PID & starts listening for signals -> from other terminal: ./client [PID] [MESSAGE] -> enter
+
 Now the server should print the message sent by the client. Supports unicode characters.
 
 - Not the cleanest implementation but it was enough.
