@@ -24,15 +24,15 @@ $(NAME): server client
 server: .server_
 
 .server_: server.o
-		make -C ft_printf
-		$(CC) -o server $< -Lft_printf -lftprintf
+		make -C libft
+		$(CC) -o server $< -Llibft -lft
 		@touch .server_
 
 client: .client_
 
 .client_: client.o
-		make -C ft_printf
-		$(CC) -o client $< -Lft_printf -lftprintf
+		make -C libft
+		$(CC) -o client $< -Llibft -lft
 		@touch .client_
 
 %.o: %.c
@@ -40,11 +40,11 @@ client: .client_
 
 clean:
 		rm -f $(OBJECTS)
-		make -C ft_printf clean
+		make -C libft clean
 		@rm -f .server .client
 
 fclean: clean
-		rm -f server client ft_printf/libftprintf.a ft_printf/libft/libft.a
+		rm -f server client libft/libft.a
 
 re: fclean all
 
