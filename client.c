@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf/include/ft_printf.h"
-#include "ft_printf/include/libft.h"
 #include "minitalk.h"
 
 void	send(char c, pid_t pid)
