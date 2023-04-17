@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "minitalk.h"
-#include "ft_printf/include/ft_printf.h"
-#include "ft_printf/include/libft.h"
 
 t_info	g_info;
 
