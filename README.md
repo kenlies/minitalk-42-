@@ -11,4 +11,18 @@ Now the server should print the message sent by the client. Supports unicode cha
 
 I've included the subject as always.
 
+use:
+
+
+     ./server
+     ./client [server PID] [message]
+examples:
+      
+      
+     ./server
+      pid: 55555
+      Waiting...
+      
+     ./client 55555 "Hello there general kenobi"
+
 <img width="622" alt="Screen Shot 2023-06-11 at 1 38 45 PM" src="https://github.com/kenlies/minitalk-42-/assets/97135325/7e3598d2-dc45-4f62-aabe-9d2fd0ee6917">
