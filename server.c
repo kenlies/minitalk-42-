@@ -6,22 +6,13 @@
 /*   By: aotsala <aotsala@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 22:47:27 by aotsala           #+#    #+#             */
-/*   Updated: 2023/04/06 14:44:06 by aotsala          ###   ########.fr       */
+/*   Updated: 2023/05/14 18:12:16 by aotsala          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
 t_info	g_info;
-
-void	setzero(void)
-{
-	g_info.c = 0;
-	g_info.i = 0;
-	g_info.j = 0;
-	g_info.len = 0;
-	g_info.str = NULL;
-}
 
 void	str_create(void)
 {
@@ -35,15 +26,28 @@ void	str_create(void)
 	g_info.i = 0;
 }
 
-void	prints(void)
+void	prints(siginfo_t *info)
 {
+	if (g_info.str[0] == '\0')
+		kill(info->si_pid, SIGUSR1);
 	ft_printf("%s\n", g_info.str);
 	free(g_info.str);
-	setzero();
+	g_info.c = 0;
+	g_info.i = 0;
+	g_info.j = 0;
+	g_info.len = 0;
+	g_info.str = NULL;
 }
 
-void	handler(int signal)
+void	prints_kill(siginfo_t *info)
 {
+	prints(info);
+	kill(info->si_pid, SIGUSR1);
+}
+
+void	handler(int signal, siginfo_t *info, void *thingy)
+{	
+	(void)thingy;
 	if (!g_info.str)
 	{
 		g_info.len = (g_info.len << 1) | (signal == SIGUSR1);
@@ -51,7 +55,7 @@ void	handler(int signal)
 		{
 			str_create();
 			if (g_info.len == 0)
-				prints();
+				prints(info);
 		}	
 	}
 	else
@@ -64,22 +68,31 @@ void	handler(int signal)
 			g_info.i = 0;
 			g_info.c = 0;
 			if (--g_info.len == 0)
-				prints();
+				prints_kill(info);
 		}
 	}
 }
 
 int	main(void)
 {
-	pid_t	pid;
+	pid_t				pid;
+	struct sigaction	sig;
 
 	pid = getpid();
-	setzero();
+	g_info.c = 0;
+	g_info.i = 0;
+	g_info.j = 0;
+	g_info.len = 0;
+	g_info.str = NULL;
 	ft_printf("pid: %d\n", pid);
+	ft_printf("Waiting...\n");
+	sig.sa_sigaction = handler;
+	sigemptyset(&sig.sa_mask);
+	sig.sa_flags = 0;
 	while (1)
 	{
-		signal(SIGUSR1, handler);
-		signal(SIGUSR2, handler);
+		sigaction(SIGUSR1, &sig, NULL);
+		sigaction(SIGUSR2, &sig, NULL);
 		pause();
 	}
 	return (0);

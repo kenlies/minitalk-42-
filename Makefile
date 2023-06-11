@@ -6,7 +6,7 @@
 #    By: aotsala <aotsala@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/17 22:27:48 by aotsala           #+#    #+#              #
-#    Updated: 2023/03/31 20:56:42 by aotsala          ###   ########.fr        #
+#    Updated: 2023/05/16 21:05:14 by aotsala          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,11 +41,11 @@ client: .client_
 clean:
 		rm -f $(OBJECTS)
 		make -C libft clean
-		@rm -f .server .client
+		@rm -f .server_ .client_
 
 fclean: clean
 		rm -f server client libft/libft.a
 
 re: fclean all
 
-.PHONY: all ft_printf clean fclean re server client
+.PHONY: all clean fclean re server client

@@ -6,13 +6,13 @@
 /*   By: aotsala <aotsala@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 22:47:27 by aotsala           #+#    #+#             */
-/*   Updated: 2023/04/06 14:45:21 by aotsala          ###   ########.fr       */
+/*   Updated: 2023/05/14 18:25:59 by aotsala          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-void	send(char c, pid_t pid)
+void	send(char c, int pid)
 {
 	int	i;
 
@@ -23,16 +23,16 @@ void	send(char c, pid_t pid)
 		{
 			if (kill(pid, SIGUSR1) == -1)
 			{
-				ft_printf("ERROR!");
-				exit(0);
+				write(2, "ERROR\n", 6);
+				exit(1);
 			}
 		}
 		else
 		{
 			if (kill(pid, SIGUSR2) == -1)
 			{
-				ft_printf("ERROR!");
-				exit(0);
+				write(2, "ERROR\n", 6);
+				exit(1);
 			}
 		}
 		i >>= 1;
@@ -40,7 +40,7 @@ void	send(char c, pid_t pid)
 	}
 }
 
-void	send_len(int len, pid_t pid)
+void	send_len(int len, int pid)
 {
 	int	i;
 
@@ -49,18 +49,18 @@ void	send_len(int len, pid_t pid)
 	{
 		if (len & i)
 		{
-			if (kill(pid, SIGUSR1))
+			if (kill(pid, SIGUSR1) == -1)
 			{
-				ft_printf("ERROR!");
-				exit(0);
+				write(2, "ERROR\n", 6);
+				exit(1);
 			}
 		}
 		else
 		{
-			if (kill(pid, SIGUSR2))
+			if (kill(pid, SIGUSR2) == -1)
 			{
-				ft_printf("ERROR!");
-				exit(0);
+				write(2, "ERROR\n", 6);
+				exit(1);
 			}
 		}
 		i >>= 1;
@@ -68,22 +68,37 @@ void	send_len(int len, pid_t pid)
 	}
 }
 
+static void	ack(int signal)
+{
+	if (signal == SIGUSR1)
+	{
+		ft_printf("Acknowledged by server!\n");
+	}
+	else
+		write(2, "Something went wrong!\n", 22);
+	exit(0);
+}
+
 int	main(int argc, char **argv)
 {
-	pid_t	pid;
+	int		pid;
 	char	*message;
 	int		i;
 
 	i = 0;
 	if (argc != 3)
 	{
-		ft_printf("ERROR\n");
-		exit(0);
+		write(2, "ERROR\n", 6);
+		exit(1);
 	}
 	pid = ft_atoi(argv[1]);
 	message = argv[2];
+	signal(SIGUSR1, &ack);
+	signal(SIGUSR2, &ack);
 	send_len(ft_strlen(argv[2]), pid);
 	while (message[i])
 		send(message[i++], pid);
+	while (1)
+		pause();
 	return (0);
 }
